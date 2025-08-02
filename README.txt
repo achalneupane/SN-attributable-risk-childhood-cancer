@@ -3,26 +3,8 @@
 ## Overview
 
 This repository provides R code, data processing, and statistical analysis pipelines to estimate the **Contributions of cancer treatment and genetic predisposition to risk of subsequent neoplasms in long-term survivors of childhood cancer from our publication: https://www.thelancet.com/journals/lanonc/article/PIIS1470-2045(25)00157-3/fulltext.
- The focus is on quantifying the proportion of SNs attributable to treatments (chemotherapy, radiotherapy), polygenic risk scores (PRS), and lifestyle factors, including extensive stratification by age, sex, and genetic ancestry.  
+The focus is on quantifying the proportion of SNs attributable to treatments (chemotherapy, radiotherapy), polygenic risk scores (PRS), and lifestyle factors, including extensive stratification by age, sex, and genetic ancestry.  
 **Statistical modeling and effect modification analyses** are central to the repository. 
-
----
-
-## Table of Contents
-
-- [Background](#background)
-- [Statistical Pipeline](#statistical-pipeline)
-  - [Data Preparation](#data-preparation)
-  - [Attributable Fraction Estimation](#attributable-fraction-estimation)
-  - [Effect Modification Analyses](#effect-modification-analyses)
-  - [Subgroup Analyses](#subgroup-analyses)
-  - [Uncertainty Quantification](#uncertainty-quantification)
-  - [Visualization](#visualization)
-- [Key Scripts](#key-scripts)
-- [Usage](#usage)
-- [Dependencies](#dependencies)
-- [Citing](#citing)
-- [Contact](#contact)
 
 ---
 

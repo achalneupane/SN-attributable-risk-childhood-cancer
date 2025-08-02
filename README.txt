@@ -1,161 +1,161 @@
-# SN-attributable-risk-childhood-cancer
+# SN-Attributable-Risk-Childhood-Cancer
 
 ## Overview
 
-This repository provides R code, data processing, and statistical analysis pipelines to estimate the **Contributions of cancer treatment and genetic predisposition to risk of subsequent neoplasms in long-term survivors of childhood cancer from our publication: https://www.thelancet.com/journals/lanonc/article/PIIS1470-2045(25)00157-3/fulltext.
-The focus is on quantifying the proportion of SNs attributable to treatments (chemotherapy, radiotherapy), polygenic risk scores (PRS), and lifestyle factors, including extensive stratification by age, sex, and genetic ancestry. 
+This repository contains R scripts and workflows for analyzing the **attributable risk of subsequent neoplasms (SNs)** in long-term survivors of childhood cancer, as described in our [Lancet Oncology publication (2025)](https://www.thelancet.com/journals/lanonc/article/PIIS1470-2045%2825%2900157-3/fulltext).
 
-
-**Statistical modeling and effect modification analyses** are central to the repository. 
+We quantify the contribution of cancer treatments (chemotherapy, radiotherapy), polygenic risk scores (PRS), and lifestyle factors to SN risk—stratified by age, sex, and genetic ancestry—using robust statistical modeling and effect modification analyses.
 
 ---
 
 ## Background
 
-Childhood cancer survivors face increased risk for subsequent neoplasms (SNs) due to a mixture of treatment exposures, inherited genetic risk, and lifestyle factors. This repository aims to rigorously estimate the **attributable fraction**—the proportion of SNs in the population that can be ascribed to specific exposures—using robust statistical methods. Analyses are performed separately for different exposures and are stratified by key modifiers (age, sex, genetic ancestry).
+Childhood cancer survivors are at elevated risk for SNs due to a combination of treatment exposures, inherited genetic predisposition, and modifiable lifestyle factors. This repository aims to estimate the **attributable fraction (AF)**—the proportion of SNs that could be avoided if a specific exposure were removed—through counterfactual modeling and survival analysis techniques.
 
 ---
 
-## Statistical Pipeline
+## Repository Structure & Workflow
 
 ### 1. Data Preparation
 
-- **Merging Data:**  
-  - Phenotype (`PHENO.ANY_SN`) and subneoplasm event data (`subneoplasms.sas7bdat`) are merged by subject ID (`sjlid`).
-  - Covariates include treatment details, genetic ancestry, lifestyle factors, and demographic info.
-  - Data cleaning removes duplicates, irrelevant columns (e.g., MRN), and handles missing values.
+**Scripts:**
 
-- **Variable Construction:**  
-  - Exposures are categorized (e.g., dose bins for radiotherapy, chemotherapy).
-  - Genetic ancestry is classified using admixture proportions (EUR: >0.8, AFR: >0.6).
+* `1.data_preparation_with_lifestyle_factors.R`
+* `2.analysis_ready_samples_treatments.R`
 
-- **Saving Analysis-Ready Data:**  
-  - Cleaned and merged data are saved as `.RData` or `.rds` files for subsequent modeling.
+**Steps:**
 
-### 2. Attributable Fraction Estimation
-
-#### Core Concept
-
-The **attributable fraction (AF)** quantifies the portion of SNs that would be prevented if a specific exposure were eliminated. Mathematically,  
-AF = (Incidence in total population - Incidence in unexposed) / Incidence in total population
-
-#### Implementation
-
-- **Counterfactual Modeling:**  
-  For each exposure (e.g., radiation, PRS, unfavorable lifestyle), the model predicts risk for each individual under "exposed" and "unexposed" scenarios.
-
-- **Risk Calculation:**  
-  - For each subgroup (e.g., EUR ancestry, AFR ancestry, age <35, ≥35), sum predicted SNs under observed and counterfactual scenarios.
-  - AF for each group:  
-    ```
-    AF = (N_total - N_counterfactual_unexposed) / N_total
-    ```
-    Where:
-      - N_total = predicted SNs under observed exposure
-      - N_counterfactual_unexposed = predicted SNs if the exposure was absent
-
-- **Exposure Combinations:**  
-  - Combined AFs calculated for multiple exposures (e.g., joint effect of treatment + PRS + lifestyle).
-
-- **Code Example:**  
-  In scripts like `4.model_fit_Any_SN.R`, AFs are calculated and bound by group:
-  ```r
-  N_no_tx = sum(dat_all$pred_no_tx[dat_all$admixture == "EUR"], na.rm = TRUE)
-  af_by_tx.EUR = (N_all.EUR - N_no_tx) / N_all.EUR
-  af_by_tx.EUR.save = rbind(af_by_tx.EUR.save, af_by_tx.EUR)
-  ```
-
-### 3. Effect Modification Analyses
-
-- **Purpose:**  
-  Investigate whether the effect of one exposure (e.g., treatment) on SN risk is modified by another variable (e.g., ancestry, sex, age).
-
-- **Implementation:**  
-  - Stratified risk modeling: AFs are computed within subgroups (e.g., males vs. females, EUR vs. AFR ancestry).
-  - Interaction terms may be included in regression models to formally test effect modification.
-
-### 4. Subgroup Analyses
-
-- **By Age:**  
-  AFs are estimated for age groups such as <35 and ≥35 years old.
-
-- **By Sex:**  
-  Separate AFs for males and females.
-
-- **By Genetic Ancestry:**  
-  AFs for EUR and AFR ancestry groups, using admixture classification.
-
-- **By SN Type:**  
-  Specific SNs (e.g., NMSC, breast cancer, thyroid cancer, meningioma, sarcoma) are analyzed individually.
-
-### 5. Uncertainty Quantification
-
-- **Bootstrap Confidence Intervals:**  
-  - AFs are computed across bootstrap samples to estimate variability.
-  - 95% confidence intervals are calculated using percentiles of bootstrap AF estimates.
-
-- **Code Example:**  
-  ```r
-  af_by_tx.EUR = paste0(round(af_by_tx.EUR.save[1,], 3), "_", 
-                        round(quantile(af_by_tx.EUR.save[-1,], probs = c(0.025, 0.975))[1], 3), "-", 
-                        round(quantile(af_by_tx.EUR.save[-1,], probs = c(0.025, 0.975))[2], 3))
-  ```
-
-### 6. Visualization
-
-- **Plotting Results:**  
-  - AF estimates and their confidence intervals are visualized using `ggplot2`.
-  - Plots include:
-    - AF by exposure and subgroup
-    - Combined AFs for multiple exposures
-    - SN-type-specific AFs
-
-- **Saving Figures:**  
-  - High-resolution plots (PDF, TIFF) are saved for publication-ready output.
-  - Example:
-    ```r
-    ggsave(plot_name, p, width = 14.6, height = 10, device = cairo_pdf)
-    ```
+* Merge phenotype, treatment, and lifestyle data by subject ID (`sjlid`).
+* Clean data: remove duplicates, handle missing values, and drop irrelevant columns.
+* Construct variables (e.g., categorize chemotherapy/radiotherapy doses, infer genetic ancestry from admixture proportions).
+* Save clean, analysis-ready datasets as `.RData` or `.rds`.
 
 ---
 
-## Key Scripts
+### 2. Time-to-Event Formatting for SN Analysis
 
-- **2.analysis_ready_samples_treatments.R:**  
-  Data merging, cleaning, and preparation for statistical modeling.
+**Script:**
 
-- **4.model_fit_Any_SN.R:**  
-  Main AF calculations; subgroup and effect modification analyses; bootstrap CIs.
+* `3.SJLIFE_SN_Longitudinal_Data_Preparation_TimeSplit_V1.R`
 
-- **5.model_fit_Any_SN_Effect_Modification.R:**  
-  Detailed modeling of effect modification.
-
-- **6.AF_plot.R:**  
-  Advanced visualization and plot generation.
+**Description:**
+Prepares longitudinal SN data for survival analysis by splitting follow-up into yearly intervals. It captures recurrent events, defines risk periods starting 5 years post-diagnosis, and creates spline terms for age to model time-varying hazards.
 
 ---
 
-## Usage
+### 3. Attributable Fraction Estimation
 
-1. **Prepare Data:**  
-   - Ensure all phenotype, treatment, and admixture files are available.
-   - Edit file paths as needed.
+**Script:**
 
-2. **Run Analysis:**  
-   - Execute scripts in sequence:  
-     `2.analysis_ready_samples_treatments.R` → `4.model_fit_Any_SN.R` → `5.model_fit_Any_SN_Effect_Modification.R` → `6.AF_plot.R`
+* `4.model_fit_Any_SN.R`
 
-3. **Interpret Results:**  
-   - Review AF estimates and confidence intervals for exposures and subgroups.
-   - Use plots for visualization and publication.
+**Concept:**
+AF = (Incidence\_observed – Incidence\_counterfactual\_unexposed) / Incidence\_observed
+
+**Approach:**
+
+* Predict individual-level SN risk under observed and counterfactual (unexposed) conditions.
+* Compute AF for each subgroup (e.g., by ancestry, age, sex).
+* Estimate combined AFs for multiple exposures (e.g., treatment + PRS + lifestyle).
+* Store results for visualization and reporting.
+
+---
+
+### 4. Effect Modification Analysis
+
+**Script:**
+
+* `5.model_fit_Any_SN_Effect_Modification.R`
+
+**Purpose:**
+Explore whether exposure effects on SN risk differ by age, sex, or genetic ancestry.
+
+**Method:**
+
+* Stratified modeling and interaction terms to assess effect modification.
+* Report subgroup-specific AFs.
+
+---
+
+### 5. Subgroup Analyses
+
+AFs are estimated for:
+
+* **Age:** <35 vs. ≥35 years
+* **Sex:** Males vs. females
+* **Genetic Ancestry:** EUR (>80% European) vs. AFR (>60% African)
+* **SN Types:** Includes NMSC, breast cancer, thyroid cancer, meningioma, sarcoma, etc.
+
+---
+
+### 6. Uncertainty Quantification
+
+**Bootstrap Confidence Intervals:**
+
+* AFs are resampled across bootstrap replicates.
+* 95% confidence intervals are derived from the empirical distribution.
+* Stored in matrix form for downstream visualization.
+
+---
+
+### 7. Visualization
+
+**Script:**
+
+* `6.AF_plot.R`
+
+**Features:**
+
+* Generate high-resolution plots using `ggplot2`:
+
+  * AF by exposure and subgroup
+  * Combined and SN-type-specific AFs
+* Save publication-ready figures in PDF/TIFF format.
+
+---
+
+## How to Use
+
+### 1. Setup
+
+Ensure the following inputs are available:
+
+* Phenotype and SN event data
+* Treatment and lifestyle data
+* Genetic ancestry estimates
+
+Edit file paths as needed within each script.
+
+### 2. Run the Pipeline
+
+Recommended script order:
+
+```r
+2.analysis_ready_samples_treatments.R  
+3.SJLIFE_SN_Longitudinal_Data_Preparation_TimeSplit_V1.R  
+4.model_fit_Any_SN.R  
+5.model_fit_Any_SN_Effect_Modification.R  
+6.AF_plot.R
+```
+
+### 3. Review Results
+
+* Examine subgroup- and exposure-specific AF estimates with bootstrapped CIs.
+* Use generated plots for visual summaries and figure panels.
 
 ---
 
 ## Dependencies
 
-- R (>= 3.6.0)
-- `haven`, `expss`, `ggplot2`, `dplyr`
-- Additional packages as referenced in scripts
+Ensure the following R packages are installed:
+
+* `haven`
+* `expss`
+* `dplyr`
+* `ggplot2`
+* Other packages as called in scripts
+
+Minimum R version: 3.6.0
 
 ---
 

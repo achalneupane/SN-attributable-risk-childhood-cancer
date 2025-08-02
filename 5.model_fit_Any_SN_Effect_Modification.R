@@ -1,5 +1,5 @@
 # load ANY SN data
-load("Z:/ResearchHome/Groups/sapkogrp/projects/Genomics/common/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.V20b.Rdata")
+load("/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.V20b.Rdata")
 
 # Yutaka's email on 03/16/2023:  It seems maxsegrtdose 0-18 Gy is a very small group and perhaps needs to be combined with 18-30 Gy
 cc
@@ -7,7 +7,7 @@ filtered_cc <- cc[cc[, 2] < 10 | cc[, 3] < 10, 1]
 filtered_cc
 
 ## Admixture classification
-admixture <- read.table("Z:/ResearchHome/Groups/sapkogrp/projects/Genomics/common/attr_fraction/admixture/merged.ancestry.file.txt", header = T)
+admixture <- read.table("/attr_fraction/admixture/merged.ancestry.file.txt", header = T)
 EUR.admix <- admixture$INDIVIDUAL[admixture$EUR > 0.8]
 AFR.admix <- admixture$INDIVIDUAL[admixture$AFR > 0.6]
 

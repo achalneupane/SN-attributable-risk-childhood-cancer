@@ -49,6 +49,8 @@ Prepares longitudinal SN data for survival analysis by splitting follow-up into 
 
 * `4.model_fit_Any_SN.R`
 
+This script employs a statistical approach based on Poisson regression to estimate the risk of developing subsequent neoplasms among childhood cancer survivors. The model incorporates various covariates—such as age, sex, treatment exposures (chemotherapy and radiotherapy), genetic ancestry, and lifestyle factors—to predict the expected number of neoplasms for each individual. To quantify the impact of specific exposures, the code generates counterfactual scenarios by setting exposures (e.g., radiotherapy, chemotherapy) to "None" and recalculates the predicted risks. The attributable fraction (AF) for each exposure is then calculated as the proportion of predicted cases that would be prevented if the exposure were eliminated, both in the overall population and within subgroups defined by age, sex, and ancestry. Confidence intervals for AF estimates are derived from bootstrap replicates, providing robust measures of uncertainty for each risk estimate. This detailed, subgroup-specific AF analysis enables a comprehensive understanding of the factors driving SN risk in childhood cancer survivors.
+
 **Concept:**
 AF = (Incidence\_observed – Incidence\_counterfactual\_unexposed) / Incidence\_observed
 

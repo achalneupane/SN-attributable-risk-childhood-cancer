@@ -1,7 +1,7 @@
 # load ANY SN data
 load("/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.V20b.Rdata")
 
-# Yutaka's email on 03/16/2023:  It seems maxsegrtdose 0-18 Gy is a very small group and perhaps needs to be combined with 18-30 Gy
+# It seems maxsegrtdose 0-18 Gy is a very small group and perhaps needs to be combined with 18-30 Gy
 cc
 filtered_cc <- cc[cc[, 2] < 10 | cc[, 3] < 10, 1]
 filtered_cc

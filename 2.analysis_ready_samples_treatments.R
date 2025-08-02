@@ -5,7 +5,7 @@ rm(list=ls())
 ## Load Phenotype data ##
 #########################
 load("/PHENOTYPE/5_lifestyle_v11.RDATA")
-source("Z:/ResearchHome/ClusterHome/aneupane/St_Jude/Achal_St_Jude/rcodes/attributable_fraction_R_codes/edit_lifestyle_variables.R")
+source("/Achal_St_Jude/rcodes/attributable_fraction_R_codes/edit_lifestyle_variables.R")
 
 # write.table(as.data.frame(PHENO.ANY_SN$sjlid), "/PHENOTYPE/SJLIDs_in_AF_project.txt", col.names = T, quote = F, row.names = F, sep = "\t")
 

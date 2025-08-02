@@ -1,15 +1,20 @@
 rm(list=ls())
 # load ANY SN data
-load("Z:/ResearchHome/Groups/sapkogrp/projects/Genomics/common/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.V20b.Rdata")
+load("/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.V20b.Rdata")
 
 
-# Yutaka's email on 03/16/2023:  It seems maxsegrtdose 0-18 Gy is a very small group and perhaps needs to be combined with 18-30 Gy
+rm(list=ls())
+# load ANY SN data
+load("/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.V20b.Rdata")
+
+
+# It seems maxsegrtdose 0-18 Gy is a very small group and perhaps needs to be combined with 18-30 Gy
 cc
 filtered_cc <- cc[cc[, 2] < 10 | cc[, 3] < 10, 1]
 filtered_cc
 
 ## Admixture classification
-admixture <- read.table("Z:/ResearchHome/Groups/sapkogrp/projects/Genomics/common/attr_fraction/admixture/merged.ancestry.file.txt", header = T)
+admixture <- read.table("/attr_fraction/admixture/merged.ancestry.file.txt", header = T)
 EUR.admix <- admixture$INDIVIDUAL[admixture$EUR > 0.8]
 AFR.admix <- admixture$INDIVIDUAL[admixture$AFR > 0.6]
 
@@ -22,9 +27,9 @@ PHENO.ANY_SN$maxsegrtdose.category[PHENO.ANY_SN$maxsegrtdose.category == ">0-<18
 PHENO.ANY_SN$maxsegrtdose.category[PHENO.ANY_SN$maxsegrtdose.category == ">=18-<30"] <- ">0-<30"
 PHENO.ANY_SN$maxsegrtdose.category <- factor(PHENO.ANY_SN$maxsegrtdose.category, levels = c("None", ">0-<30", ">=30"))
 
-# save.image("Z:/ResearchHome/Groups/sapkogrp/projects/Genomics/common/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.Rdata")
+# save.image("/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.Rdata")
 
-# load("Z:/ResearchHome/Groups/sapkogrp/projects/Genomics/common/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.Rdata")
+# load("/attr_fraction/PHENOTYPE/6.sjlife_without_lifestyle.Any_SNs.Rdata")
 
 ######################################
 ## Attributable fraction of Any SNs ##
@@ -537,8 +542,8 @@ for(boot in 1:1000){
   ## df_test[1:1000,c("sjlid","start","end")]  
   ### with boot=1 as an example, SJL1264701 was selected 6 times, so there are 6 copies of this person's data in the new data.
   # df_test[df_test$sjlid=="SJL1264701",c("sjlid","start","end","newid")]
-
-
+  
+  
   
   # dat_all = PHENO.ANY_SN
   # dat_all=dat_all[dat_all$evt1==1,]
@@ -589,43 +594,43 @@ for(boot in 1:1000){
   N_all = sum(dat_all$pred_all, na.rm = TRUE)
   N_no_tx = sum(dat_all$pred_no_tx, na.rm = TRUE)
   af_by_tx = (N_all - N_no_tx) / N_all
-#   af_by_tx <- round(af_by_tx,3)
+  #   af_by_tx <- round(af_by_tx,3)
   af_by_tx
   
   ## Male
   N_no_tx = sum(dat_all$pred_no_tx[dat_all$gender == "Male"], na.rm = TRUE)
   af_by_tx.male = (N_all.male - N_no_tx) / N_all.male
-#   af_by_tx.male <- round(af_by_tx.male,3)
+  #   af_by_tx.male <- round(af_by_tx.male,3)
   af_by_tx.male
   
   ## Female
   N_no_tx = sum(dat_all$pred_no_tx[dat_all$gender == "Female"], na.rm = TRUE)
   af_by_tx.female = (N_all.female - N_no_tx) / N_all.female
-#   af_by_tx.female <- round(af_by_tx.female,3)
+  #   af_by_tx.female <- round(af_by_tx.female,3)
   af_by_tx.female
   
   ## < 35
   N_no_tx = sum(dat_all$pred_no_tx[dat_all$AGE_AT_LAST_CONTACT.cs1 < 35], na.rm = TRUE)
   af_by_tx.lt.35 = (N_all.lt.35 - N_no_tx) / N_all.lt.35
-#   af_by_tx.lt.35 <- round(af_by_tx.lt.35,3)
+  #   af_by_tx.lt.35 <- round(af_by_tx.lt.35,3)
   af_by_tx.lt.35
   
   ## >= 35
   N_no_tx = sum(dat_all$pred_no_tx[dat_all$AGE_AT_LAST_CONTACT.cs1 >= 35], na.rm = TRUE)
   af_by_tx.gteq.35 = (N_all.gteq.35 - N_no_tx) / N_all.gteq.35
-#   af_by_tx.gteq.35 <- round(af_by_tx.gteq.35,3)
+  #   af_by_tx.gteq.35 <- round(af_by_tx.gteq.35,3)
   af_by_tx.gteq.35
   
   ## EUR
   N_no_tx = sum(dat_all$pred_no_tx[dat_all$admixture == "EUR"], na.rm = TRUE)
   af_by_tx.EUR = (N_all.EUR - N_no_tx) / N_all.EUR
-#   af_by_tx.EUR <- round(af_by_tx.EUR,3)
+  #   af_by_tx.EUR <- round(af_by_tx.EUR,3)
   af_by_tx.EUR
   
   ## AFR
   N_no_tx = sum(dat_all$pred_no_tx[dat_all$admixture == "AFR"], na.rm = TRUE)
   af_by_tx.AFR = (N_all.AFR - N_no_tx) / N_all.AFR
-#   af_by_tx.AFR <- round(af_by_tx.AFR,3)
+  #   af_by_tx.AFR <- round(af_by_tx.AFR,3)
   af_by_tx.AFR
   
   
@@ -649,43 +654,43 @@ for(boot in 1:1000){
   N_all = sum(dat_all$pred_all, na.rm = TRUE)
   N_no_rt = sum(dat_all$pred_no_rt, na.rm = TRUE)
   af_by_rt = (N_all - N_no_rt) / N_all
-#   af_by_rt <- round(af_by_rt,3)
+  #   af_by_rt <- round(af_by_rt,3)
   af_by_rt
   
   ## Male
   N_no_rt = sum(dat_all$pred_no_rt[dat_all$gender == "Male"], na.rm = TRUE)
   af_by_rt.male = (N_all.male - N_no_rt) / N_all.male
-#   af_by_rt.male <- round(af_by_rt.male,3)
+  #   af_by_rt.male <- round(af_by_rt.male,3)
   af_by_rt.male
   
   ## Female
   N_no_rt = sum(dat_all$pred_no_rt[dat_all$gender == "Female"], na.rm = TRUE)
   af_by_rt.female = (N_all.female - N_no_rt) / N_all.female
-#   af_by_rt.female <- round(af_by_rt.female,3)
+  #   af_by_rt.female <- round(af_by_rt.female,3)
   af_by_rt.female
   
   ## < 35
   N_no_rt = sum(dat_all$pred_no_rt[dat_all$AGE_AT_LAST_CONTACT.cs1 < 35], na.rm = TRUE)
   af_by_rt.lt.35 = (N_all.lt.35 - N_no_rt) / N_all.lt.35
-#   af_by_rt.lt.35 <- round(af_by_rt.lt.35,3)
+  #   af_by_rt.lt.35 <- round(af_by_rt.lt.35,3)
   af_by_rt.lt.35
   
   ## >= 35
   N_no_rt = sum(dat_all$pred_no_rt[dat_all$AGE_AT_LAST_CONTACT.cs1 >= 35], na.rm = TRUE)
   af_by_rt.gteq.35 = (N_all.gteq.35 - N_no_rt) / N_all.gteq.35
-#   af_by_rt.gteq.35 <- round(af_by_rt.gteq.35,3)
+  #   af_by_rt.gteq.35 <- round(af_by_rt.gteq.35,3)
   af_by_rt.gteq.35
   
   ## EUR
   N_no_rt = sum(dat_all$pred_no_rt[dat_all$admixture == "EUR"], na.rm = TRUE)
   af_by_rt.EUR = (N_all.EUR - N_no_rt) / N_all.EUR
-#   af_by_rt.EUR <- round(af_by_rt.EUR,3)
+  #   af_by_rt.EUR <- round(af_by_rt.EUR,3)
   af_by_rt.EUR
   
   ## AFR
   N_no_rt = sum(dat_all$pred_no_rt[dat_all$admixture == "AFR"], na.rm = TRUE)
   af_by_rt.AFR = (N_all.AFR - N_no_rt) / N_all.AFR
-#   af_by_rt.AFR <- round(af_by_rt.AFR,3)
+  #   af_by_rt.AFR <- round(af_by_rt.AFR,3)
   af_by_rt.AFR
   
   
@@ -710,43 +715,43 @@ for(boot in 1:1000){
   N_all = sum(dat_all$pred_all, na.rm = TRUE)
   N_no_tx.rt = sum(dat_all$pred_no_tx.rt, na.rm = TRUE)
   af_by_tx.rt = (N_all - N_no_tx.rt) / N_all
-#   af_by_tx.rt <- round(af_by_tx.rt,3)
+  #   af_by_tx.rt <- round(af_by_tx.rt,3)
   af_by_tx.rt
   
   ## Male
   N_no_tx.rt = sum(dat_all$pred_no_tx.rt[dat_all$gender == "Male"], na.rm = TRUE)
   af_by_tx.rt.male = (N_all.male - N_no_tx.rt) / N_all.male
-#   af_by_tx.rt.male <- round(af_by_tx.rt.male,3)
+  #   af_by_tx.rt.male <- round(af_by_tx.rt.male,3)
   af_by_tx.rt.male
   
   ## Female
   N_no_tx.rt = sum(dat_all$pred_no_tx.rt[dat_all$gender == "Female"], na.rm = TRUE)
   af_by_tx.rt.female = (N_all.female - N_no_tx.rt) / N_all.female
-#   af_by_tx.rt.female <- round(af_by_tx.rt.female,3)
+  #   af_by_tx.rt.female <- round(af_by_tx.rt.female,3)
   af_by_tx.rt.female
   
   ## < 35
   N_no_tx.rt = sum(dat_all$pred_no_tx.rt[dat_all$AGE_AT_LAST_CONTACT.cs1 < 35], na.rm = TRUE)
   af_by_tx.rt.lt.35 = (N_all.lt.35 - N_no_tx.rt) / N_all.lt.35
-#   af_by_tx.rt.lt.35 <- round(af_by_tx.rt.lt.35,3)
+  #   af_by_tx.rt.lt.35 <- round(af_by_tx.rt.lt.35,3)
   af_by_tx.rt.lt.35
   
   ## >= 35
   N_no_tx.rt = sum(dat_all$pred_no_tx.rt[dat_all$AGE_AT_LAST_CONTACT.cs1 >= 35], na.rm = TRUE)
   af_by_tx.rt.gteq.35 = (N_all.gteq.35 - N_no_tx.rt) / N_all.gteq.35
-#   af_by_tx.rt.gteq.35 <- round(af_by_tx.rt.gteq.35,3)
+  #   af_by_tx.rt.gteq.35 <- round(af_by_tx.rt.gteq.35,3)
   af_by_tx.rt.gteq.35
   
   ## EUR
   N_no_tx.rt = sum(dat_all$pred_no_tx.rt[dat_all$admixture == "EUR"], na.rm = TRUE)
   af_by_tx.rt.EUR = (N_all.EUR - N_no_tx.rt) / N_all.EUR
-#   af_by_tx.rt.EUR <- round(af_by_tx.rt.EUR,3)
+  #   af_by_tx.rt.EUR <- round(af_by_tx.rt.EUR,3)
   af_by_tx.rt.EUR
   
   ## AFR
   N_no_tx.rt = sum(dat_all$pred_no_tx.rt[dat_all$admixture == "AFR"], na.rm = TRUE)
   af_by_tx.rt.AFR = (N_all.AFR - N_no_tx.rt) / N_all.AFR
-#   af_by_tx.rt.AFR <- round(af_by_tx.rt.AFR,3)
+  #   af_by_tx.rt.AFR <- round(af_by_tx.rt.AFR,3)
   af_by_tx.rt.AFR
   
   
@@ -761,43 +766,43 @@ for(boot in 1:1000){
   dat_all$pred_no_prs = predict(fit_all, newdata = dat_prs, type = "response")
   N_no_prs = sum(dat_all$pred_no_prs, na.rm = TRUE)
   af_by_prs = (N_all - N_no_prs) / N_all
-#   af_by_prs <- round(af_by_prs,3)
+  #   af_by_prs <- round(af_by_prs,3)
   af_by_prs
   
   ## Male
   N_no_prs = sum(dat_all$pred_no_prs[dat_all$gender == "Male"], na.rm = TRUE)
   af_by_prs.male = (N_all.male - N_no_prs) / N_all.male
-#   af_by_prs.male <- round(af_by_prs.male,3)
+  #   af_by_prs.male <- round(af_by_prs.male,3)
   af_by_prs.male
   
   ## Female
   N_no_prs = sum(dat_all$pred_no_prs[dat_all$gender == "Female"], na.rm = TRUE)
   af_by_prs.female = (N_all.female - N_no_prs) / N_all.female
-#   af_by_prs.female <- round(af_by_prs.female,3)
+  #   af_by_prs.female <- round(af_by_prs.female,3)
   af_by_prs.female
   
   ## < 35
   N_no_prs = sum(dat_all$pred_no_prs[dat_all$AGE_AT_LAST_CONTACT.cs1 < 35], na.rm = TRUE)
   af_by_prs.lt.35 = (N_all.lt.35 - N_no_prs) / N_all.lt.35
-#   af_by_prs.lt.35 <- round(af_by_prs.lt.35,3)
+  #   af_by_prs.lt.35 <- round(af_by_prs.lt.35,3)
   af_by_prs.lt.35
   
   ## >= 35
   N_no_prs = sum(dat_all$pred_no_prs[dat_all$AGE_AT_LAST_CONTACT.cs1 >= 35], na.rm = TRUE)
   af_by_prs.gteq.35 = (N_all.gteq.35 - N_no_prs) / N_all.gteq.35
-#   af_by_prs.gteq.35 <- round(af_by_prs.gteq.35,3)
+  #   af_by_prs.gteq.35 <- round(af_by_prs.gteq.35,3)
   af_by_prs.gteq.35
   
   ## EUR
   N_no_prs = sum(dat_all$pred_no_prs[dat_all$admixture == "EUR"], na.rm = TRUE)
   af_by_prs.EUR = (N_all.EUR - N_no_prs) / N_all.EUR
-#   af_by_prs.EUR <- round(af_by_prs.EUR,3)
+  #   af_by_prs.EUR <- round(af_by_prs.EUR,3)
   af_by_prs.EUR
   
   ## AFR
   N_no_prs = sum(dat_all$pred_no_prs[dat_all$admixture == "AFR"], na.rm = TRUE)
   af_by_prs.AFR = (N_all.AFR - N_no_prs) / N_all.AFR
-#   af_by_prs.AFR <- round(af_by_prs.AFR,3)
+  #   af_by_prs.AFR <- round(af_by_prs.AFR,3)
   af_by_prs.AFR
   
   
@@ -848,44 +853,44 @@ for(boot in 1:1000){
   
   N_no_combined = sum(dat_all$pred_no_combined, na.rm = TRUE)
   af_by_combined = (N_all - N_no_combined) / N_all
-#   af_by_combined <- round(af_by_combined,3)
+  #   af_by_combined <- round(af_by_combined,3)
   af_by_combined
   
   
   ## Male
   N_no_combined = sum(dat_all$pred_no_combined[dat_all$gender == "Male"], na.rm = TRUE)
   af_by_combined.male = (N_all.male - N_no_combined) / N_all.male
-#   af_by_combined.male <- round(af_by_combined.male,3)
+  #   af_by_combined.male <- round(af_by_combined.male,3)
   af_by_combined.male
   
   ## Female
   N_no_combined = sum(dat_all$pred_no_combined[dat_all$gender == "Female"], na.rm = TRUE)
   af_by_combined.female = (N_all.female - N_no_combined) / N_all.female
-#   af_by_combined.female <- round(af_by_combined.female,3)
+  #   af_by_combined.female <- round(af_by_combined.female,3)
   af_by_combined.female
   
   ## < 35
   N_no_combined = sum(dat_all$pred_no_combined[dat_all$AGE_AT_LAST_CONTACT.cs1 < 35], na.rm = TRUE)
   af_by_combined.lt.35 = (N_all.lt.35 - N_no_combined) / N_all.lt.35
-#   af_by_combined.lt.35 <- round(af_by_combined.lt.35,3)
+  #   af_by_combined.lt.35 <- round(af_by_combined.lt.35,3)
   af_by_combined.lt.35
   
   ## >= 35
   N_no_combined = sum(dat_all$pred_no_combined[dat_all$AGE_AT_LAST_CONTACT.cs1 >= 35], na.rm = TRUE)
   af_by_combined.gteq.35 = (N_all.gteq.35 - N_no_combined) / N_all.gteq.35
-#   af_by_combined.gteq.35 <- round(af_by_combined.gteq.35,3)
+  #   af_by_combined.gteq.35 <- round(af_by_combined.gteq.35,3)
   af_by_combined.gteq.35
   
   ## EUR
   N_no_combined = sum(dat_all$pred_no_combined[dat_all$admixture == "EUR"], na.rm = TRUE)
   af_by_combined.EUR = (N_all.EUR - N_no_combined) / N_all.EUR
-#   af_by_combined.EUR <- round(af_by_combined.EUR,3)
+  #   af_by_combined.EUR <- round(af_by_combined.EUR,3)
   af_by_combined.EUR
   
   ## AFR
   N_no_combined = sum(dat_all$pred_no_combined[dat_all$admixture == "AFR"], na.rm = TRUE)
   af_by_combined.AFR = (N_all.AFR - N_no_combined) / N_all.AFR
-#   af_by_combined.AFR <- round(af_by_combined.AFR,3)
+  #   af_by_combined.AFR <- round(af_by_combined.AFR,3)
   af_by_combined.AFR
   
   af_by_tx.save = rbind(af_by_tx.save, af_by_tx)
@@ -1229,3 +1234,4 @@ sn.model <- (setNames(cbind.data.frame(estimate, std.error, P.val
 sn.model <- sn.model[!grepl("AGE_AT_LAST_CONTACT", row.names(sn.model)),]
 sn.model
 # View(sn.model)
+
